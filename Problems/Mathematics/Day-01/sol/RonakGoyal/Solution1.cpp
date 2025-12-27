@@ -1,69 +1,73 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 /*
 Problem Statement:
-Given an array of integers and multiple range queries, find the sum
-of elements in a given range for each query.
+Some number of people (this number is even) are standing evenly in a circle.
+Each person looks directly at the person opposite to them.
+Given that person a is looking at person b, determine whom person c
+is looking at. If no such circle configuration exists, output -1.
 
-Approach (Using Prefix Sums):
-We construct a prefix sum array where prefix[i] stores the sum of
-elements from index 0 to i. For any range [l, r], the sum can be
-calculated in O(1) time using:
-prefix[r] - prefix[l - 1].
+Approach:
+1. The distance between opposites (diff) is half the total population.
+   N = 2 * |a - b|
+2. Validity Check: a, b, and c must all be less than or equal to N.
+3. To find the opposite of c:
+   - If c <= N/2, its opposite is c + N/2.
+   - If c > N/2, its opposite is c - N/2.
 
 Time Complexity:
-O(n + q)
+O(1) per test case
 
 Space Complexity:
-O(n)
-
+O(1)
 Example:
-Input:
-5
-1 2 3 4 5
-1
-1 3
-
+7
+6 2 4
+2 3 1
+2 4 10
+5 3 4
+1 3 2
+2 5 4
+4 3 2
 Output:
-9
+8
+-1
+-1
+-1
+4
+1
+-1
 
 Submission Link : https://codeforces.com/contest/1560/submission/355273828
 */
 
+#include <bits/stdc++.h>
+using namespace std;
+
 int main() {
-    int n;
-    cin >> n;
+    int t;
+    cin >> t;
 
-    vector<int> arr(n), prefix(n);
+    while (t--) {
+        long long a, b, c;
+        cin >> a >> b >> c;
 
-    // Building prefix sum array
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-        if (i == 0) {
-            prefix[i] = arr[i];
+        long long diff = llabs(a - b);
+        long long N = 2 * diff;
+
+        if (a > N || b > N || c > N) {
+            cout << -1 << endl;
         } else {
-            prefix[i] = prefix[i - 1] + arr[i];
+            long long half = N / 2;
+            long long d;
+            if (c <= half) {
+                d = c + half;
+            } else {
+                d = c - half;
+            }
+            cout << d << endl;
         }
-    }
-
-    int q;
-    cin >> q;
-
-    // Answering queries
-    while (q--) {
-        int l, r;
-        cin >> l >> r;
-
-        int sum;
-        if (l == 0) {
-            sum = prefix[r];
-        } else {
-            sum = prefix[r] - prefix[l - 1];
-        }
-
-        cout << sum << endl;
     }
 
     return 0;
 }
+
+
